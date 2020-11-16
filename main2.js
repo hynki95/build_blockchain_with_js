@@ -15,10 +15,10 @@ class Block{
     calculateHash(){
         return SHA256(this.index + this.previousHash + this.timestamp + this.data + JSON.stringify(this.data) + this.nonce).toString();
     }
-//채굴 프로세스
+//채굴 프로세스 => 난이도가 올라가면 더 많은 양의 nonce를 대입해서 더 많은 해시작업을 하기 때문에 채굴시간이 증가한다.
     mineBlock(difficulty){
       while(this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")){
-        this.nonce++;  
+        this.nonce++; //무작위로 nonce 1씩 증가시키면서 대입해보는것. 
         this.hash = this.calculateHash();
       }
 
@@ -30,8 +30,8 @@ class Blockchain{
     //블록체인 관련 클래스
     constructor(){
         this.chain = [this.createGenesisBlock()];
-        // this.difficulty = 2;
-        this.difficulty = 4;
+        this.difficulty = 2;
+        // this.difficulty = 4;
     }
     //생성할 때 Block 객체를 만들면서 시작 -> 제네시스 블록 생성
 

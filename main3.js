@@ -1,6 +1,6 @@
 const SHA256 = require('crypto-js/sha256');
 
-//트렌젝션
+//트렌젝션 class
 class Transactions{
     constructor(fromAddress,toAddress,amount){
         this.fromAddress = fromAddress;
@@ -12,8 +12,7 @@ class Transactions{
 class Block{
 
     //블록의 구성 요소
-    constructor(index, timestamp, transactions, previousHash = ''){ 
-        this.index = index;
+    constructor(timestamp, transactions, previousHash = ''){ 
         this.timestamp = timestamp;
         this.transactions = transactions;
         this.previousHash = previousHash;
@@ -41,7 +40,7 @@ class Blockchain{
         this.chain = [this.createGenesisBlock()];
         // this.difficulty = 2;
         this.difficulty = 4;
-        this.pendingTransactions = [];
+        this.pendingTransactions = []; //대기중인 트랜잭션이 들어가는 공간 (memory pool)
         this.miningReward = 100;
     }
     //생성할 때 Block 객체를 만들면서 시작 -> 제네시스 블록 생성
@@ -54,7 +53,7 @@ class Blockchain{
         return this.chain[this.chain.length - 1];
     }
 
-    //대기중인 트렌젝션 처리하기
+    //대기중인 트렌젝션 처리하기 - memory pool , TX (pending Transactions)
     minePendingTransactions(miningRewardAddress){
         let block = new Block(Date.now(),this.pendingTransactions);
         block.mineBlock(this.difficulty);
@@ -88,9 +87,8 @@ class Blockchain{
           }
         }
     
-        debug('getBalanceOfAdrees: %s', balance);
         return balance;
-      }
+    }
 
     //유효성 검사
     isChainValid(){
@@ -117,10 +115,10 @@ NewCoin.createTransaction(new Transactions('address1','address2',100));
 NewCoin.createTransaction(new Transactions('address2','address1',50));
 
 console.log('\n Starting the miner ...');
-NewCoin.minePendingTransactions('xabiers-address');
+NewCoin.minePendingTransactions('timehacker-address');
 
-console.log('\nBalance of xavier is', NewCoin.getBalanceOfAddress('xabiers-address'));
+console.log('\nBalance of timehacker is', NewCoin.getBalanceOfAddress('timehacker-address'));
 
-onsole.log('\n Starting the miner again...');
-NewCoin.minePendingTransactions('xabiers-address');
-console.log('\nBalance of xavier is', NewCoin.getBalanceOfAddress('xabiers-address'));
+console.log('\n Starting the miner again...');
+NewCoin.minePendingTransactions('timehacker-address');
+console.log('\nBalance of timehacker is', NewCoin.getBalanceOfAddress('timehacker-address'));
